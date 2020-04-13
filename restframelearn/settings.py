@@ -42,8 +42,12 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
 
+    # social auth
+    'social_django',
+
     # Project apps
-    'api'
+    'api',
+    'socialchk'
 ]
 
 AUTH_USER_MODEL = 'api.User'
@@ -62,6 +66,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'social_django.middleware.SocialAuthExceptionMiddleware',  # <--
+
 ]
 
 ROOT_URLCONF = 'restframelearn.urls'
@@ -69,7 +76,7 @@ ROOT_URLCONF = 'restframelearn.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -77,6 +84,9 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect'
             ],
         },
     },
@@ -84,6 +94,14 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'restframelearn.wsgi.application'
 
+
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.github.GithubOAuth2',
+    'social_core.backends.twitter.TwitterOAuth',
+    'social_core.backends.facebook.FacebookOAuth2',
+
+    'django.contrib.auth.backends.ModelBackend',
+)
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
@@ -114,7 +132,14 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+LOGIN_REDIRECT_URL = 'home'
+LOGIN_URL = 'login'
 
+SOCIAL_AUTH_GITHUB_KEY = 'ac8dd229ea13c694b747'
+SOCIAL_AUTH_GITHUB_SECRET = 'a3fddb945bcda7153df4bc3197667410635738bc'
+
+SOCIAL_AUTH_FACEBOOK_KEY = '516684392345436'  # App ID
+SOCIAL_AUTH_FACEBOOK_SECRET = 'a4c2e24472b1653eafbfdff8816997c3'
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
